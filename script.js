@@ -1,21 +1,9 @@
 // Create forEach prototype
 Array.prototype.forEach = function(functionToBeCalledForEachItem) {
 	for (var i = 0; i < this.length; i++) {
-		functionToBeCalledForEachItem(this[i]);
+		functionToBeCalledForEachItem(this[i], i);
 	}
 };
-
-// var haikuStyles = {
-// 	forest: function() {
-// 		return color(Math.floor(random(200)), 255, Math.floor(random(200)));	
-// 	},
-// 	ocean: function() {
-// 		color(Math.floor(random(200)), Math.floor(random(200)), 255)
-// 	},
-// 	fire: function() {
-// 		color(Math.floor(255, random(200)), Math.floor(random(200)))	
-// 	}
-// };
 
 var fiveSyllablePhrases = [
 	'in the darkest soup',
@@ -41,7 +29,6 @@ var lineCounter = 0;
 var output;
 var button;
 var styleField;
-var style;
 
 function setup() {
 	noCanvas();
@@ -49,9 +36,6 @@ function setup() {
 	output = select('#output');
 	button = select('#submit');
 	styleField = select('#haiku_style');
-	// styleField.changed(function(styleKey) {
-	// 	style = haikuStyles[styleKey]();
-	// });
 	button.mousePressed(addHaikuLine);
 };
 
@@ -62,7 +46,7 @@ function addHaikuLine() {
 		getColoredWords(sevenSyllablePhrases[Math.floor(random(sevenSyllablePhrases.length))]);
 	} else if (lineCounter === 2) {
 		getColoredWords(fiveSyllablePhrases[Math.floor(random(fiveSyllablePhrases.length))]);
-
+		createP('--------------------------------')
 		lineCounter = 0;
 		return;
 	}
@@ -71,18 +55,21 @@ function addHaikuLine() {
 };
 
 function getColoredWords(line) {
+	var haikuStyles = {
+		forest: color(Math.floor(random(200)), 255, Math.floor(random(200))),
+		ocean: color(Math.floor(random(200)), Math.floor(random(200)), 255),
+		fire: color(Math.floor(255, random(200)), Math.floor(random(200)))
+	};
+
+	var style = haikuStyles[styleField.value()] || haikuStyles['forest'];
+
 	var words = line.split(' ');
 	var coloredLine = createP('');
 
 	words.forEach(function(word) {
-		// var span = createSpan(word + ' ').style('color', style);
-		var span = createSpan(word + ' ').style('color', color(Math.floor(random(200)), 255, Math.floor(random(200))));
+		var span = createSpan(word + ' ').style('color', style);
 		span.parent(coloredLine);
 	});
 
 	return coloredLine;
 }
-
-
-
-
